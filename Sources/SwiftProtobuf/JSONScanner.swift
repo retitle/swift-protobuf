@@ -1307,12 +1307,16 @@ internal struct JSONScanner {
       if let name = try nextOptionalKey() {
         if let e = E(rawUTF8: name) {
           return e
+        } else if let e = E(rawValue: 0) {
+          return e
         } else {
           throw JSONDecodingError.unrecognizedEnumValue
         }
       }
       let name = try nextQuotedString()
       if let e = E(name: name) {
+        return e
+      } else if let e = E(rawValue: 0) {
         return e
       } else {
         throw JSONDecodingError.unrecognizedEnumValue
@@ -1321,6 +1325,8 @@ internal struct JSONScanner {
       let n = try nextSInt()
       if let i = Int(exactly: n) {
         if let e = E(rawValue: i) {
+          return e
+        } else if let e = E(rawValue: 0) {
           return e
         } else {
           throw JSONDecodingError.unrecognizedEnumValue
